@@ -1,20 +1,20 @@
-import Dicer, { DicerConfig, PartStream } from "dicer";
+import Dicer = require("dicer");
 
 import fs = require("fs");
 import stream = require("stream");
 
 function testDicerSyntax() {
-    const opts: DicerConfig = {
+    const opts: Dicer.Config = {
         boundary: "testing",
     };
     const dicer = new Dicer(opts);
 
-    const opts2: DicerConfig = {
+    const opts2: Dicer.Config = {
         headerFirst: true,
         maxHeaderPairs: 1,
     };
 
-    const opts3: DicerConfig = {
+    const opts3: Dicer.Config = {
         boundary: "more-testing",
         headerFirst: false,
         maxHeaderPairs: 8,
@@ -70,7 +70,7 @@ function testDicerSyntax() {
  *
  * @param part Part found
  */
-function handleDicerPartStream(part: PartStream) {
+function handleDicerPartStream(part: Dicer.PartStream) {
     console.log("dicer part found");
 
     const outputFileStream = fs.createWriteStream("out-test-file.txt");
