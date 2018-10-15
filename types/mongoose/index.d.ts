@@ -1896,6 +1896,14 @@ declare module "mongoose" {
      */
     or(array: any[]): this;
 
+    /**
+     * Make this query throw an error if no documents match the given `filter`.
+     * This is handy for integrating with async/await, because `orFail()` saves
+     * you an extra `if` statement to check if no document was found.
+     * @param err optional error to throw if no docs match `filter`
+     */
+    orFail(err?: Function | Error): DocumentQuery<T & {}, DocType>;
+
     /** Specifies a $polygon condition */
     polygon(...coordinatePairs: number[][]): this;
     polygon(path: string, ...coordinatePairs: number[][]): this;
