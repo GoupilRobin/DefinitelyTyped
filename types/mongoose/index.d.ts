@@ -1,4 +1,4 @@
-// Type definitions for Mongoose 5.2.13
+// Type definitions for Mongoose 5.3.4
 // Project: http://mongoosejs.com/
 // Definitions by: horiuchi <https://github.com/horiuchi>
 //                 sindrenm <https://github.com/sindrenm>
@@ -161,17 +161,6 @@ declare module "mongoose" {
   export function set(key: string, value: any): void;
 
   export function startSession(options?: mongodb.SessionOptions, cb?: (err: any, session: mongodb.ClientSession) => void): Promise<mongodb.ClientSession>;
-
-  class CastError extends Error {
-    /**
-     * The Mongoose CastError constructor
-     * @param type The name of the type
-     * @param value The value that failed to cast
-     * @param path The path a.b.c in the doc where this cast error occurred
-     * @param reason The original error that was thrown
-     */
-    constructor(type: string, value: any, path: string, reason?: NativeError);
-  }
 
   /*
    * section connection.js
@@ -480,15 +469,6 @@ declare module "mongoose" {
   }
 
   /*
-   * section error/validation.js
-   * http://mongoosejs.com/docs/api.html#error-validation-js
-   */
-  class ValidationError extends Error {
-    /** Console.log helper */
-    toString(): string;
-  }
-
-  /*
    * section error.js
    * http://mongoosejs.com/docs/api.html#error-js
    */
@@ -512,6 +492,40 @@ declare module "mongoose" {
 
     /** For backwards compatibility. Same as mongoose.Error.messages */
     static Messages: any;
+  }
+
+  namespace Error {
+    class CastError extends Error {
+      /** The name of the type */
+      kind: string;
+
+      /** The value that failed to cast */
+      value: any;
+
+      /** The path a.b.c in the doc where this cast error occurred */
+      path: string;
+
+      /** The original error that was thrown */
+      reason?: NativeError;
+
+      /**
+       * The Mongoose CastError constructor
+       * @param kind The name of the type
+       * @param value The value that failed to cast
+       * @param path The path a.b.c in the doc where this cast error occurred
+       * @param reason The original error that was thrown
+       */
+      constructor(kind: string, value: any, path: string, reason?: NativeError);
+    }
+
+    /*
+    * section error/validation.js
+    * http://mongoosejs.com/docs/api.html#error-validation-js
+    */
+    class ValidationError extends Error {
+      /** Console.log helper */
+      toString(): string;
+    }
   }
 
   interface EachAsyncOptions {
@@ -1166,7 +1180,7 @@ declare module "mongoose" {
      * @param kind optional kind property for the error
      * @returns the current ValidationError, with all currently invalidated paths
      */
-    invalidate(path: string, errorMsg: string | NativeError, value: any, kind?: string): ValidationError | boolean;
+    invalidate(path: string, errorMsg: string | NativeError, value: any, kind?: string): Error.ValidationError | boolean;
 
     /** Returns true if path was directly set and modified, else false. */
     isDirectModified(path: string): boolean;
